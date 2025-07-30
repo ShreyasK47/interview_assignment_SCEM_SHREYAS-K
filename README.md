@@ -1,0 +1,7 @@
+This repository contains the completed solutions for the two assigned tasks. The project is organized into two main directories, task1 and task2, corresponding to each part of the assignment.
+
+*Task 1: Corporate Attendance System UI Prototype*: 
+The first task is a responsive front-end prototype for a corporate attendance system, developed using vanilla HTML5, CSS3, and JavaScript (ES6). The primary objective was to build a clean, modern, and intuitive user interface without external frameworks, demonstrating strong foundational web development skills. The application features distinct interactive dashboards for both Employee and Admin roles, a complete mock authentication flow, and dynamic data tables. The layout is fully responsive, utilizing modern CSS features like Flexbox and Grid for optimal viewing on all devices. To view the project, please open the index.html file located in the task1 directory.
+
+*Task 2: Array Manipulation Algorithms*:
+The second task contains JavaScript solutions for two specified algorithmic problems focused on array manipulation. The solutions are designed to be efficient and readable, demonstrating problem-solving abilities. The implemented functions address a) checking an array for duplicate values and b) moving all zeroes to the end of an array in-place while maintaining the relative order of non-zero elements. The code for these solutions is located within the task2 directory.

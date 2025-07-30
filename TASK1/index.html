@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Attendance System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #1abc9c; /* Teal */
+            --primary-hover: #16a085;
+            --sidebar-bg: #1e293b; /* Dark Slate */
+            --content-bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-light: #f8fafc;
+            --text-dark: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--content-bg);
+        }
+
+        /* --- LOGIN PAGE STYLES --- */
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e293b, #334155);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .login-container h1 {
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .login-container p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        
+        #otp-info {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary { background-color: var(--primary-color); }
+        .btn-primary:hover { background-color: var(--primary-hover); box-shadow: 0 4px 15px rgba(26, 188, 156, 0.3); }
+
+        .btn-secondary { background-color: var(--text-muted); margin-top: 10px; }
+        .btn-secondary:hover { background-color: var(--text-dark); }
+        
+        .forgot-password {
+            display: block;
+            margin-top: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        /* --- MAIN APP LAYOUT --- */
+        .app-container {
+            display: none; 
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            color: var(--text-light);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 10px 0;
+        }
+        
+        .sidebar-header .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+        
+        .sidebar-header .logo i {
+            color: var(--primary-color);
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar-nav a i {
+            width: 20px;
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav a.active {
+            background-color: var(--primary-color);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+        }
+
+        .main-content {
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .content-page {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .content-header h1 {
+            color: var(--text-dark);
+            font-size: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .dashboard-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--primary-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        
+        .dashboard-card.summary-card { cursor: default; }
+
+        .dashboard-card:hover:not(.summary-card) {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        
+        .dashboard-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .dashboard-card h3 {
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-card p { color: var(--text-muted); }
+        
+        .summary-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .summary-card .label {
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .content-container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+        
+        tbody tr { transition: background-color 0.2s; }
+        tbody tr:hover { background-color: #f1f5f9; }
+
+        .status { font-weight: 600; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; }
+        .status-present { color: #059669; background-color: #d1fae5; }
+        .status-absent { color: #dc2626; background-color: #fee2e2; }
+        .status-late { color: #d97706; background-color: #fef3c7; }
+        
+        textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            resize: vertical;
+        }
+        
+        .btn-success { background-color: #22c55e; }
+        .btn-danger { background-color: #ef4444; }
+        .btn-sm { padding: 8px 12px; font-size: 0.9rem; width: auto; margin-right: 5px;}
+        
+        /* Request Card Styles */
+        .request-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border-left: 5px solid #f59e0b; 
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        .request-card.fading-out {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        
+        /* Reports Chart Styles */
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .bar-label {
+            width: 120px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        .bar {
+            height: 30px;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 0.9rem;
+            transition: width 0.8s ease-in-out;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="loginWrapper" class="login-wrapper">
+        <div class="login-container" id="loginContainer">
+            <h1><i class="fas fa-fingerprint" style="color: var(--primary-color);"></i> Attendance Pro</h1>
+            <p>Welcome back! Please login to your account.</p>
+            <div class="form-group"><label for="username">Username / Email</label><input type="text" id="username" placeholder="e.g., shreyas.k"></div>
+            <div class="form-group"><label for="password">Password</label><input type="password" id="password" placeholder="••••••••"></div>
+            <button class="btn btn-primary" onclick="handleLogin('employee')">Employee Login</button>
+            <button class="btn btn-secondary" onclick="handleLogin('admin')">Admin Login</button>
+            <a href="#" class="forgot-password" onclick="showLoginContent('forgotPasswordContainer')">Forgot Password?</a>
+        </div>
+        
+        <div class="login-container" id="forgotPasswordContainer" style="display:none;">
+            <h1>Reset Password</h1>
+            <p>Enter your email to receive an OTP.</p>
+            <div class="form-group"><label for="reset-email">Email</label><input type="email" id="reset-email" placeholder="you@example.com"></div>
+            <button class="btn btn-primary" onclick="handleSendResetLink()">Send OTP</button>
+            <a href="#" class="forgot-password" onclick="showLoginContent('loginContainer')">← Back to Login</a>
+        </div>
+
+        <div class="login-container" id="otpContainer" style="display:none;">
+            <h1>Enter OTP</h1>
+            <p>An OTP has been sent to <span id="otp-info">your email</span>.</p>
+            <div class="form-group"><label for="otp-input">6-Digit OTP</label><input type="text" id="otp-input" maxlength="6" inputmode="numeric"></div>
+            <button class="btn btn-primary" onclick="handleVerifyOTP()">Verify OTP</button>
+            <a href="#" class="forgot-password" onclick="showLoginContent('loginContainer')">← Back to Login</a>
+        </div>
+
+        <div class="login-container" id="changePasswordContainer" style="display:none;">
+            <h1>Set New Password</h1>
+            <p>Create a new secure password for your account.</p>
+            <div class="form-group"><label for="new-password">New Password</label><input type="password" id="new-password"></div>
+            <div class="form-group"><label for="confirm-password">Confirm New Password</label><input type="password" id="confirm-password"></div>
+            <button class="btn btn-primary" onclick="handleChangePassword()">Confirm & Change Password</button>
+        </div>
+    </div>
+
+    <div id="employeeAppContainer" class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header"><span class="logo"><i class="fas fa-fingerprint"></i> AttenPro</span></div>
+            <nav class="sidebar-nav">
+                <a href="#" onclick="showContent('employeeDashboardPage', 'employee')" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="#" onclick="showContent('viewAttendancePage', 'employee')"><i class="fas fa-calendar-alt"></i> View Attendance</a>
+                <a href="#" onclick="showContent('requestCorrectionPage', 'employee')"><i class="fas fa-edit"></i> Request Correction</a>
+            </nav>
+            <div class="sidebar-footer"><a href="#" onclick="handleLogout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></div>
+        </aside>
+        <main class="main-content">
+            <div id="employeeDashboardPage" class="content-page"><div class="content-header"><h1>Dashboard</h1></div><div class="dashboard-grid"><div class="dashboard-card" onclick="handleClockIn()"><i class="fas fa-sign-in-alt"></i><h3>Clock In</h3><p>Register your arrival</p></div><div class="dashboard-card" onclick="handleClockOut()"><i class="fas fa-sign-out-alt"></i><h3>Clock Out</h3><p>Register your departure</p></div></div></div>
+            <div id="viewAttendancePage" class="content-page"><div class="content-header"><h1>Your Attendance</h1></div><div class="content-container"><table><thead><tr><th>Date</th><th>Clock-In</th><th>Clock-Out</th><th>Status</th></tr></thead><tbody id="employeeAttendanceTable"></tbody></table></div></div>
+            <div id="requestCorrectionPage" class="content-page"><div class="content-header"><h1>Request Correction</h1></div><div class="content-container"><div class="form-group"><label for="correction-date">Date of Issue</label><input type="date" id="correction-date"></div><div class="form-group"><label for="correction-reason">Reason</label><select id="correction-reason"><option>Forgot to clock in</option><option>Forgot to clock out</option><option>Incorrect time entry</option><option>Other</option></select></div><div class="form-group"><label for="correction-details">Details</label><textarea id="correction-details" rows="4" placeholder="Provide correct times..."></textarea></div><button class="btn btn-primary" onclick="submitCorrectionRequest()">Submit Request</button></div></div>
+        </main>
+    </div>
+
+    <div id="adminAppContainer" class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header"><span class="logo"><i class="fas fa-user-shield"></i> Admin Panel</span></div>
+            <nav class="sidebar-nav">
+                <a href="#" onclick="showContent('adminDashboardPage', 'admin')" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="#" onclick="showContent('viewAllAttendancePage', 'admin')"><i class="fas fa-users"></i> All Attendance</a>
+                <a href="#" onclick="showContent('manageUsersPage', 'admin')"><i class="fas fa-user-cog"></i> Manage Users</a>
+                <a href="#" onclick="showContent('correctionRequestsPage', 'admin')"><i class="fas fa-inbox"></i> Requests</a>
+                <a href="#" onclick="showContent('reportsPage', 'admin')"><i class="fas fa-chart-pie"></i> Reports</a>
+            </nav>
+            <div class="sidebar-footer"><a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a></div>
+        </aside>
+        <main class="main-content">
+            <div id="adminDashboardPage" class="content-page"><div class="content-header"><h1>Admin Dashboard</h1></div><div class="dashboard-grid"><div class="dashboard-card" onclick="showContent('viewAllAttendancePage', 'admin')"><i class="fas fa-users"></i><h3>All Attendance</h3><p>View today's records</p></div><div class="dashboard-card" onclick="showContent('manageUsersPage', 'admin')"><i class="fas fa-user-cog"></i><h3>Manage Users</h3><p>Add, edit, delete</p></div><div class="dashboard-card" onclick="showContent('correctionRequestsPage', 'admin')"><i class="fas fa-inbox"></i><h3>Requests</h3><p>Review corrections</p></div><div class="dashboard-card" onclick="showContent('reportsPage', 'admin')"><i class="fas fa-chart-pie"></i><h3>Reports</h3><p>Generate analytics</p></div></div></div>
+            <div id="viewAllAttendancePage" class="content-page"><div class="content-header"><h1>Today's Attendance</h1></div><div class="content-container"><table><thead><tr><th>Employee</th><th>Clock-In</th><th>Clock-Out</th><th>Status</th></tr></thead><tbody id="allAttendanceTable"></tbody></table></div></div>
+            <div id="manageUsersPage" class="content-page"><div class="content-header"><h1>Manage Users</h1><button class="btn btn-primary" style="width:auto;" onclick="alert('Add New User form would appear here.')"><i class="fas fa-plus"></i> Add User</button></div><div class="content-container"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined Date</th><th>Actions</th></tr></thead><tbody id="usersTableBody"></tbody></table></div></div>
+            <div id="correctionRequestsPage" class="content-page"><div class="content-header"><h1>Correction Requests</h1></div><div id="requestsListContainer"></div></div>
+            <div id="reportsPage" class="content-page"><div class="content-header"><h1 id="reportTitle">Reports & Analytics</h1></div><div class="dashboard-grid" id="reportSummary"></div><div class="content-container" style="margin-top: 30px;"><h3>Attendance by Department</h3><div class="chart-container" id="departmentalChart"></div></div></div>
+        </main>
+    </div>
+
+    <script>
+        function showLoginContent(containerId) {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('forgotPasswordContainer').style.display = 'none';
+            document.getElementById('otpContainer').style.display = 'none';
+            document.getElementById('changePasswordContainer').style.display = 'none';
+            document.getElementById(containerId).style.display = 'block';
+        }
+
+        function showContent(pageId, userType) {
+            const container = document.getElementById(`${userType}AppContainer`);
+            container.querySelectorAll('.content-page').forEach(p => p.style.display = 'none');
+            document.getElementById(pageId).style.display = 'block';
+            const sidebar = container.querySelector('.sidebar-nav');
+            sidebar.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+            sidebar.querySelector(`a[onclick*="'${pageId}'"]`).classList.add('active');
+        }
+
+        function handleLogin(userType) {
+            document.getElementById('loginWrapper').style.display = 'none';
+            const appContainer = document.getElementById(`${userType}AppContainer`);
+            appContainer.style.display = 'grid';
+            showContent(userType === 'employee' ? 'employeeDashboardPage' : 'adminDashboardPage', userType);
+        }
+        
+        function handleLogout() {
+            document.getElementById('employeeAppContainer').style.display = 'none';
+            document.getElementById('adminAppContainer').style.display = 'none';
+            document.getElementById('loginWrapper').style.display = 'flex';
+            showLoginContent('loginContainer');
+        }
+        
+        // --- NEW FORGOT PASSWORD FLOW ---
+        function handleSendResetLink() {
+            const email = document.getElementById('reset-email').value;
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+            alert(`An OTP has been sent to ${email}.`);
+            document.getElementById('otp-info').textContent = email;
+            showLoginContent('otpContainer');
+        }
+
+        function handleVerifyOTP() {
+            const otp = document.getElementById('otp-input').value;
+            if (otp && otp.length === 6 && !isNaN(otp)) {
+                alert('OTP Verified Successfully!');
+                showLoginContent('changePasswordContainer');
+            } else {
+                alert('Invalid OTP. Please enter a 6-digit number.');
+            }
+        }
+
+        function handleChangePassword() {
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            if (!newPassword || !confirmPassword) {
+                alert('Please fill in both password fields.');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match. Please try again.');
+                return;
+            }
+            alert('Password changed successfully! Please log in with your new password.');
+            showLoginContent('loginContainer');
+        }
+
+        // --- Data Population & Handlers ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('loginWrapper').style.display = 'flex';
+            showContent('employeeDashboardPage', 'employee');
+            populateEmployeeAttendance();
+            populateAllAttendance();
+            populateManageUsers();
+            populateCorrectionRequests();
+            populateReports();
+        });
+
+        // --- UPDATED CLOCK-IN/OUT FUNCTIONS ---
+        function handleClockIn() {
+            const currentTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute:'2-digit', hour12: true });
+            if (window.confirm(`Are you sure you want to Clock In at ${currentTime}?`)) {
+                alert('Clock In successful! ✅');
+            }
+        }
+        function handleClockOut() {
+            const currentTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute:'2-digit', hour12: true });
+             if (window.confirm(`Are you sure you want to Clock Out at ${currentTime}?`)) {
+                alert('Clock Out successful! ✅');
+            }
+        }
+
+        function submitCorrectionRequest() {
+            alert('Correction request sent successfully!');
+            showContent('employeeDashboardPage', 'employee');
+        }
+        
+        function populateEmployeeAttendance() {
+            const tableBody = document.getElementById('employeeAttendanceTable');
+            tableBody.innerHTML = '';
+            for (let i = 0; i < 60; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const status = Math.random() > 0.1 ? '<span class="status status-present">Present</span>' : '<span class="status status-late">Late</span>';
+                tableBody.innerHTML += `<tr><td>${date.toLocaleDateString('en-IN')}</td><td>09:${String(Math.floor(Math.random()*15)).padStart(2,'0')} AM</td><td>06:${String(Math.floor(Math.random()*15)).padStart(2,'0')} PM</td><td>${status}</td></tr>`;
+            }
+        }
+        
+        function populateAllAttendance() {
+            const tableBody = document.getElementById('allAttendanceTable');
+            tableBody.innerHTML = '';
+            const employees = ['Shreyas K', 'Sujith', 'Sharath', 'Raju', 'Ashith', 'Prajwal'];
+            employees.forEach(name => {
+                const rnd = Math.random();
+                const status = rnd > 0.8 ? '<span class="status status-absent">Absent</span>' : (rnd > 0.6 ? '<span class="status status-late">Late</span>' : '<span class="status status-present">Present</span>');
+                let clockIn = `09:${String(Math.floor(Math.random()*20)).padStart(2,'0')} AM`;
+                let clockOut = `06:${String(Math.floor(Math.random()*20)).padStart(2,'0')} PM`;
+                if(status.includes('Absent')) { clockIn = 'N/A'; clockOut = 'N/A'; }
+                tableBody.innerHTML += `<tr><td>${name}</td><td>${clockIn}</td><td>${clockOut}</td><td>${status}</td></tr>`;
+            });
+        }
+
+        function populateManageUsers() {
+            const tableBody = document.getElementById('usersTableBody');
+            tableBody.innerHTML = '';
+            const users = [
+                { name: 'Sharath P', email: 'sharath.p@example.com', role: 'Sales Manager', joined: '2022-03-15' },
+                { name: 'Sujith Kumar', email: 'sujith.w@example.com', role: 'Sr. Engineer', joined: '2021-11-20' },
+                { name: 'Will Smith', email: 'will.s@example.com', role: 'Developer', joined: '2023-01-10' },
+                { name: 'Harry Potter', email: 'harry.p@example.com', role: 'HR Executive', joined: '2022-08-01' },
+            ];
+            users.forEach(user => {
+                tableBody.innerHTML += `<tr><td>${user.name}</td><td>${user.email}</td><td>${user.role}</td><td>${user.joined}</td><td><button class="btn btn-sm btn-secondary" onclick="alert('Editing ${user.name}')"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-danger" onclick="alert('Deleting ${user.name}')"><i class="fas fa-trash"></i></button></td></tr>`;
+            });
+        }
+        
+        function populateCorrectionRequests() {
+            const container = document.getElementById('requestsListContainer');
+            container.innerHTML = '';
+            const requests = [
+                { name: 'Ashith', date: '2025-07-29', reason: 'Forgot to press the "Clock out" button.', details: 'I left at 6:15 PM but forgot to clock out.'},
+                { name: 'Sujith', date: '2025-07-28', reason: 'Accidentally pressed "Clock out" on arrival.', details: 'I clocked out by mistake at 9:05 AM instead of clocking in.'}
+            ];
+            if(requests.length === 0) {
+                 container.innerHTML = `<div class="content-container"><p style="text-align:center; color: var(--text-muted);">No pending requests.</p></div>`;
+                 return;
+            }
+            requests.forEach((req, index) => {
+                container.innerHTML += `<div class="request-card" id="req-card-${index}"><div style="display: flex; justify-content: space-between; align-items: flex-start;"><div><h4 style="color: var(--text-dark);">${req.name} <span style="font-weight:400; color: var(--text-muted); font-size: 0.9rem;">- Request for ${req.date}</span></h4><p style="margin-top: 5px;"><strong>Reason:</strong> ${req.reason}</p><p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;"><i>"${req.details}"</i></p></div><div style="text-align: right; white-space: nowrap;"><button class="btn btn-sm btn-success" onclick="handleRequestAction(this, 'Approved')">Approve</button><button class="btn btn-sm btn-danger" onclick="handleRequestAction(this, 'Rejected')">Reject</button></div></div></div>`;
+            });
+        }
+        
+        function handleRequestAction(button, status) {
+            const card = button.closest('.request-card');
+            alert(`Request has been ${status}.`);
+            card.classList.add('fading-out');
+            setTimeout(() => { card.remove(); }, 300);
+        }
+        
+        function populateReports() {
+            const now = new Date('2025-07-30');
+            const monthName = now.toLocaleString('default', { month: 'long' });
+            document.getElementById('reportTitle').innerText = `Monthly Report - ${monthName} ${now.getFullYear()}`;
+            const summaryContainer = document.getElementById('reportSummary');
+            summaryContainer.innerHTML = `<div class="dashboard-card summary-card"><p class="value">${Math.floor(Math.random()*10+50)}</p><p class="label">Total Employees</p></div><div class="dashboard-card summary-card"><p class="value">${Math.floor(Math.random()*5+92)}%</p><p class="label">On-Time Rate</p></div><div class="dashboard-card summary-card"><p class="value">${Math.floor(Math.random()*20+30)}</p><p class="label">Total Late Days</p></div><div class="dashboard-card summary-card"><p class="value">2</p><p class="label">Pending Requests</p></div>`;
+            const chartContainer = document.getElementById('departmentalChart');
+            chartContainer.innerHTML = '';
+            const departments = [ { name: 'Engineering', rate: Math.floor(Math.random() * 10 + 90) }, { name: 'Sales & Marketing', rate: Math.floor(Math.random() * 10 + 88) }, { name: 'Human Resources', rate: Math.floor(Math.random() * 5 + 95) }, { name: 'Support', rate: Math.floor(Math.random() * 15 + 85) } ];
+            departments.forEach(dept => {
+                chartContainer.innerHTML += `<div class="chart-bar"><div class="bar-label">${dept.name}</div><div class="bar" style="width: ${dept.rate}%;">${dept.rate}%</div></div>`;
+            });
+        }
+    </script>
+</body>
+</html>
